@@ -46,7 +46,11 @@ class Reminder(Base):
     user = relationship("User", back_populates="reminders")
     task = relationship("Task", back_populates="reminders")
 
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+if DATABASE_URL.startswith("sqlite"):
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+else:
+    engine = create_engine(DATABASE_URL)
+
 SessionLocal = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 
 def init_db():
